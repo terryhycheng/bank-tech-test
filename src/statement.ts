@@ -24,7 +24,8 @@ export class Statement {
       action,
     };
     this.records.push(record);
-    this.records = this.#sortingRecords(this.records);
+    this.#sortingRecords();
+    this.#addBalance();
 
     if (action === "withdraw") {
       this.#withdrawChecker(id);
@@ -62,17 +63,19 @@ export class Statement {
     });
   }
 
-  #sortingRecords(records: Record[]): Record[] {
-    records.sort((a, b) => {
+  #sortingRecords() {
+    this.records.sort((a, b) => {
       return a.date.getTime() - b.date.getTime();
     });
+  }
+
+  #addBalance() {
     let total = 0;
-    records.forEach((record) => {
+    this.records.forEach((record) => {
       record.action === "deposit"
         ? (total += record.amount)
         : (total -= record.amount);
       record.balance = total;
     });
-    return records;
   }
 }
