@@ -1,18 +1,21 @@
 import { Account } from "../src/account";
+import { Formater } from "../src/formater";
 
 let account: Account;
+let formater: Formater;
 let consoleSpy: jest.SpyInstance;
 
 describe("Account", () => {
   beforeEach(() => {
-    account = new Account();
+    formater = new Formater();
+    account = new Account(formater);
     consoleSpy = jest.spyOn(console, "log");
     consoleSpy.mockReset();
   });
 
   describe("default setting", () => {
     it("should return 0 when the account was created", () => {
-      expect(account.balance).toEqual(0);
+      expect(account.calculateBalance()).toEqual(0);
     });
 
     it("should print out a empty statement message", () => {
@@ -26,28 +29,28 @@ describe("Account", () => {
   describe("#deposit", () => {
     it("should add the correct deposit to the balance", () => {
       account.deposit(50, "18-03-2023");
-      expect(account.balance).toEqual(50);
+      expect(account.calculateBalance()).toEqual(50);
     });
   });
 
   describe("#withdraw", () => {
     it("should deduct the correct amount from the balance", () => {
       account.deposit(100, "20-03-2023");
-      account.withdraw(50, "21-03-2023");
-      expect(account.balance).toEqual(50);
+      account.withdraw(50, "20-03-2023");
+      expect(account.calculateBalance()).toEqual(50);
     });
   });
 
   describe("#showStatement", () => {
     it("should print out the statement in a reverse order", () => {
       account.deposit(100, "20-03-2023");
-      account.withdraw(50, "21-03-2023");
+      account.withdraw(50, "20-03-2023");
       account.showStatement();
       expect(consoleSpy.mock.calls[0][0]).toBe(
         "date || credit || debit || balance"
       );
       expect(consoleSpy.mock.calls[1][0]).toBe(
-        "21/03/2023 || || 50.00 || 50.00"
+        "20/03/2023 || || 50.00 || 50.00"
       );
       expect(consoleSpy.mock.calls[2][0]).toBe(
         "20/03/2023 || 100.00 || || 100.00"
@@ -97,13 +100,13 @@ describe("Account", () => {
 
     it("should prevent users to add an invalid transaction to the records", () => {
       account.deposit(100, "20-03-2023");
-      expect(account.balance).toEqual(100);
+      expect(account.calculateBalance()).toEqual(100);
       expect(() => account.withdraw(50, "18-03-2023")).toThrowError(
         "Transaction failed: not enough balance"
       );
       account.deposit(50, "16-03-2023");
       account.withdraw(50, "18-03-2023");
-      expect(account.balance).toEqual(100);
+      expect(account.calculateBalance()).toEqual(100);
     });
   });
 });
