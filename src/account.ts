@@ -70,6 +70,6 @@ export class Account {
   }
 
   #inputChecker(input: any) {
-    return typeof input === "number";
+    return typeof input === "number" && input > 0;
   }
 }

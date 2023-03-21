@@ -76,5 +76,14 @@ describe("Account", () => {
         );
       });
     });
+
+    it("should return an error message if the user passes a negative integer intput", () => {
+      expect(() => account.deposit(-1, "20-03-2023")).toThrowError(
+        "Action failed: invalid input"
+      );
+      expect(() => account.withdraw(-10, "20-03-2023")).toThrowError(
+        "Action failed: invalid input"
+      );
+    });
   });
 });
