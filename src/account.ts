@@ -9,4 +9,8 @@ export class Account {
   showBalance(): number {
     return this.balance;
   }
+
+  showStatement(): string {
+    return "There is no transaction in this account.";
+  }
 }

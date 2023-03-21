@@ -11,4 +11,12 @@ describe("Account", () => {
       expect(account.showBalance()).toEqual(0);
     });
   });
+
+  describe("#showStatement", () => {
+    it("should print out a empty statement message", () => {
+      expect(account.showStatement()).toEqual(
+        "There is no transaction in this account."
+      );
+    });
+  });
 });
