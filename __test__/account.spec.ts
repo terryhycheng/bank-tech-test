@@ -40,8 +40,14 @@ describe("Account", () => {
       account.deposit(100, "20-03-2023");
       account.withdraw(50, "20-03-2023");
       account.showStatement();
-      expect(consoleSpy).toHaveBeenCalledWith(
+      expect(consoleSpy.mock.calls[0][0]).toBe(
         "date || credit || debit || balance"
+      );
+      expect(consoleSpy.mock.calls[1][0]).toBe(
+        "20/03/2023 || || 50.00 || 50.00"
+      );
+      expect(consoleSpy.mock.calls[2][0]).toBe(
+        "20/03/2023 || 100.00 || || 100.00"
       );
     });
   });

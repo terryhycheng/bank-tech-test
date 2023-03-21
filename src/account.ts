@@ -1,7 +1,8 @@
 export type Record = {
-  date: string;
-  amount: number;
+  date: Date;
+  amount: string;
   action: string;
+  balance: string;
 };
 
 export class Account {
@@ -23,6 +24,10 @@ export class Account {
       return "There is no transaction in this account.";
     } else {
       console.log("date || credit || debit || balance");
+      this.records.sort((a, b) => {
+        return a.date.getTime() - b.date.getTime();
+      });
+      this.records.forEach((record) => this.#formatRecord(record));
     }
   }
 
@@ -38,10 +43,26 @@ export class Account {
 
   #addTransaction(amount: number, date: string, action: string) {
     const record: Record = {
-      amount,
-      date,
+      amount: amount.toFixed(2),
+      date: this.#formatDate(date),
       action,
+      balance: this.balance.toFixed(2),
     };
-    this.records.push(record);
+    this.records.unshift(record);
+  }
+
+  #formatRecord({ date, amount, action, balance }: Record) {
+    const formattedDate = date.toLocaleDateString("en-GB");
+    console.log(
+      `${formattedDate} || ${
+        action === "deposit" ? `${amount} ||` : `|| ${amount}`
+      } || ${balance}`
+    );
+  }
+
+  #formatDate(date: string) {
+    const dateArr = date.split("-");
+    const dateObj = new Date(`${dateArr[2]}-${dateArr[1]}-${dateArr[0]}`);
+    return dateObj;
   }
 }
