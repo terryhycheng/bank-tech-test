@@ -1,9 +1,4 @@
-export type Record = {
-  date: Date;
-  amount: string;
-  action: string;
-  balance: string;
-};
+import { Record } from "../types/types";
 
 export class Account {
   // type
