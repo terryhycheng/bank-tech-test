@@ -64,5 +64,17 @@ describe("Account", () => {
         "There is no transaction in this account."
       );
     });
+
+    it("should return an error message if the user passes a non-integer intput", () => {
+      const wrongInput = ["123", true, null];
+      wrongInput.forEach((input) => {
+        expect(() => account.deposit(input as any, "20-03-2023")).toThrowError(
+          "Action failed: invalid input"
+        );
+        expect(() => account.withdraw(input as any, "20-03-2023")).toThrowError(
+          "Action failed: invalid input"
+        );
+      });
+    });
   });
 });

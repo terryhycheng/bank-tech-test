@@ -23,16 +23,24 @@ export class Account {
   }
 
   deposit(amount: number, date: string): void {
-    this.balance += amount;
-    this.#addTransaction(amount, date, "deposit");
+    if (this.#inputChecker(amount)) {
+      this.balance += amount;
+      this.#addTransaction(amount, date, "deposit");
+    } else {
+      throw new Error("Action failed: invalid input");
+    }
   }
 
   withdraw(amount: number, date: string): void {
-    if (this.balance >= amount) {
-      this.balance -= amount;
-      this.#addTransaction(amount, date, "withdraw");
+    if (this.#inputChecker(amount)) {
+      if (this.balance >= amount) {
+        this.balance -= amount;
+        this.#addTransaction(amount, date, "withdraw");
+      } else {
+        console.log("There is no transaction in this account.");
+      }
     } else {
-      console.log("There is no transaction in this account.");
+      throw new Error("Action failed: invalid input");
     }
   }
 
@@ -59,5 +67,9 @@ export class Account {
     const dateArr = date.split("-");
     const dateObj = new Date(`${dateArr[2]}-${dateArr[1]}-${dateArr[0]}`);
     return dateObj;
+  }
+
+  #inputChecker(input: any) {
+    return typeof input === "number";
   }
 }
