@@ -18,7 +18,7 @@ describe("Account", () => {
 
   describe("default setting", () => {
     it("should return 0 when the account was created", () => {
-      expect(account.calculateBalance()).toEqual(0);
+      expect(account.showBalance()).toEqual(0);
     });
 
     it("should print out a empty statement message", () => {
@@ -32,7 +32,7 @@ describe("Account", () => {
   describe("#deposit", () => {
     it("should add the correct deposit to the balance", () => {
       account.deposit(50, "18-03-2023");
-      expect(account.calculateBalance()).toEqual(50);
+      expect(account.showBalance()).toEqual(50);
     });
   });
 
@@ -40,7 +40,7 @@ describe("Account", () => {
     it("should deduct the correct amount from the balance", () => {
       account.deposit(100, "20-03-2023");
       account.withdraw(50, "20-03-2023");
-      expect(account.calculateBalance()).toEqual(50);
+      expect(account.showBalance()).toEqual(50);
     });
   });
 
@@ -103,13 +103,13 @@ describe("Account", () => {
 
     it("should prevent users to add an invalid transaction to the records", () => {
       account.deposit(100, "20-03-2023");
-      expect(account.calculateBalance()).toEqual(100);
+      expect(account.showBalance()).toEqual(100);
       expect(() => account.withdraw(50, "18-03-2023")).toThrowError(
         "Transaction failed: not enough balance"
       );
       account.deposit(50, "16-03-2023");
       account.withdraw(50, "18-03-2023");
-      expect(account.calculateBalance()).toEqual(100);
+      expect(account.showBalance()).toEqual(100);
     });
   });
 });

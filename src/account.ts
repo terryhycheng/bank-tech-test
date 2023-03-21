@@ -1,4 +1,3 @@
-import { Record } from "../types/types";
 import { Formater } from "./formater";
 import { Statement } from "./statement";
 
@@ -12,14 +11,8 @@ export class Account {
     this.statement = statement;
   }
 
-  calculateBalance(): number {
-    let total = 0;
-    this.statement.records.forEach((record) => {
-      record.action === "deposit"
-        ? (total += record.amount)
-        : (total -= record.amount);
-    });
-    return total;
+  showBalance(): number {
+    return this.statement.calculateBalance();
   }
 
   deposit(amount: number, date: string): void {

@@ -1,8 +1,6 @@
 import { Record } from "../types/types";
 
 export class Formater {
-  constructor() {}
-
   formatDate(date: string) {
     const dateRegex = /^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-\d{4}$/;
     if (dateRegex.test(date)) {

@@ -2,6 +2,7 @@ import { Record } from "../types/types";
 import { Formater } from "./formater";
 
 export class Statement {
+  // Types
   records: Record[];
   formater: Formater;
 
@@ -13,7 +14,7 @@ export class Statement {
   addTransaction(
     amount: number,
     date: string,
-    action: string,
+    action: "deposit" | "withdraw",
     id: string = crypto.randomUUID()
   ) {
     const record: Record = {
@@ -37,9 +38,19 @@ export class Statement {
     }
 
     console.log("date || credit || debit || balance");
-    this.#sortingRecords(this.records)
+    this.records
       .reverse()
       .forEach((record) => this.formater.formatRecord(record));
+  }
+
+  calculateBalance(): number {
+    let total = 0;
+    this.records.forEach((record) => {
+      record.action === "deposit"
+        ? (total += record.amount)
+        : (total -= record.amount);
+    });
+    return total;
   }
 
   #withdrawChecker(id: string) {
