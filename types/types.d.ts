@@ -1,6 +1,6 @@
 export type Record = {
   date: Date;
-  amount: string;
+  amount: number;
   action: string;
-  balance: string;
+  balance?: number;
 };

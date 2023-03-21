@@ -18,6 +18,14 @@ export class Account {
       this.records.sort((a, b) => {
         return a.date.getTime() - b.date.getTime();
       });
+      let total = 0;
+      this.records.forEach((record) => {
+        record.action === "deposit"
+          ? (total += record.amount)
+          : (total -= record.amount);
+        record.balance = total;
+      });
+      this.records.reverse();
       this.records.forEach((record) => this.#formatRecord(record));
     }
   }
@@ -37,7 +45,7 @@ export class Account {
         this.balance -= amount;
         this.#addTransaction(amount, date, "withdraw");
       } else {
-        console.log("There is no transaction in this account.");
+        throw new Error("Transaction failed: not enough balance");
       }
     } else {
       throw new Error("Action failed: invalid amount input");
@@ -46,10 +54,9 @@ export class Account {
 
   #addTransaction(amount: number, date: string, action: string) {
     const record: Record = {
-      amount: amount.toFixed(2),
+      amount: Number(amount.toFixed(2)),
       date: this.#formatDate(date),
       action,
-      balance: this.balance.toFixed(2),
     };
     this.records.unshift(record);
   }
@@ -58,14 +65,15 @@ export class Account {
     const formattedDate = date.toLocaleDateString("en-GB");
     console.log(
       `${formattedDate} || ${
-        action === "deposit" ? `${amount} ||` : `|| ${amount}`
-      } || ${balance}`
+        action === "deposit"
+          ? `${amount.toFixed(2)} ||`
+          : `|| ${amount.toFixed(2)}`
+      } || ${balance?.toFixed(2)}`
     );
   }
 
   #formatDate(date: string) {
     const dateRegex = /^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-\d{4}$/;
-    console.log(dateRegex.test(date));
     if (dateRegex.test(date)) {
       const dateArr = date.split("-");
       const dateObj = new Date(`${dateArr[2]}-${dateArr[1]}-${dateArr[0]}`);
