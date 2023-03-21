@@ -33,7 +33,7 @@ describe("Account", () => {
   describe("#withdraw", () => {
     it("should deduct the correct amount from the balance", () => {
       account.deposit(100, "20-03-2023");
-      account.withdraw(50, "20-03-2023");
+      account.withdraw(50, "21-03-2023");
       expect(account.balance).toEqual(50);
     });
   });
@@ -93,6 +93,17 @@ describe("Account", () => {
       expect(() => account.withdraw(-10, "20-03-2023")).toThrowError(
         "Action failed: invalid amount input"
       );
+    });
+
+    it("should prevent users to add an invalid transaction to the records", () => {
+      account.deposit(100, "20-03-2023");
+      expect(account.balance).toEqual(100);
+      expect(() => account.withdraw(50, "18-03-2023")).toThrowError(
+        "Transaction failed: not enough balance"
+      );
+      account.deposit(50, "16-03-2023");
+      account.withdraw(50, "18-03-2023");
+      expect(account.balance).toEqual(100);
     });
   });
 });

@@ -28,7 +28,7 @@ export class Account {
     }
 
     this.balance += amount;
-    this.#addTransaction(amount, date, "deposit");
+    this.#addTransaction(crypto.randomUUID(), amount, date, "deposit");
   }
 
   withdraw(amount: number, date: string): void {
@@ -36,12 +36,23 @@ export class Account {
       throw new Error("Action failed: invalid amount input");
     }
 
-    if (this.balance >= amount) {
-      this.balance -= amount;
-      this.#addTransaction(amount, date, "withdraw");
-    } else {
+    if (this.balance < amount) {
       throw new Error("Transaction failed: not enough balance");
     }
+
+    const id = crypto.randomUUID();
+    this.#addTransaction(id, amount, date, "withdraw");
+    const newRecords = this.#sortingRecords(this.records);
+
+    newRecords.forEach((record) => {
+      if (record.balance! < 0) {
+        this.records = this.records.filter((record) => record.id !== id);
+        throw new Error("Transaction failed: not enough balance");
+      }
+    });
+
+    this.balance -= amount;
+    this.records = newRecords;
   }
 
   #sortingRecords(records: Record[]): Record[] {
@@ -58,8 +69,9 @@ export class Account {
     return records.reverse();
   }
 
-  #addTransaction(amount: number, date: string, action: string) {
+  #addTransaction(id: string, amount: number, date: string, action: string) {
     const record: Record = {
+      id,
       amount: Number(amount.toFixed(2)),
       date: this.#formatDate(date),
       action,
