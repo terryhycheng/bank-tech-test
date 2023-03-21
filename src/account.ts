@@ -17,4 +17,8 @@ export class Account {
   deposit(amount: number, date: string): void {
     this.balance += amount;
   }
+
+  withdraw(amount: number, date: string): void {
+    this.balance -= amount;
+  }
 }

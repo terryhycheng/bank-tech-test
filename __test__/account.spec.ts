@@ -27,4 +27,14 @@ describe("Account", () => {
       expect(account.showBalance()).toEqual(50);
     });
   });
+
+  describe("#withdraw", () => {
+    it("should deduct the correct amount from the balance", () => {
+      account.deposit(100, "20-03-2023");
+
+      account.withdraw(50, "20-03-2023");
+
+      expect(account.showBalance()).toEqual(50);
+    });
+  });
 });
