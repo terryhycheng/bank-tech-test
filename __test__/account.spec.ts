@@ -56,6 +56,18 @@ describe("Account", () => {
   });
 
   describe("edge cases", () => {
+    it("should throw an error when the date format is incorrect", () => {
+      expect(() => account.deposit(50, "03-20-2023")).toThrowError(
+        "Action failed: invalid date input"
+      );
+      expect(() => account.deposit(50, "-142!241njqwkr")).toThrowError(
+        "Action failed: invalid date input"
+      );
+      expect(() => account.deposit(50, "")).toThrowError(
+        "Action failed: invalid date input"
+      );
+    });
+
     it("should remain unchanged and print out an error message if the amount is larger than the balance", () => {
       account.withdraw(50, "21-03-2023");
       account.showStatement();
@@ -69,20 +81,20 @@ describe("Account", () => {
       const wrongInput = ["123", true, null];
       wrongInput.forEach((input) => {
         expect(() => account.deposit(input as any, "20-03-2023")).toThrowError(
-          "Action failed: invalid input"
+          "Action failed: invalid amount input"
         );
         expect(() => account.withdraw(input as any, "20-03-2023")).toThrowError(
-          "Action failed: invalid input"
+          "Action failed: invalid amount input"
         );
       });
     });
 
     it("should return an error message if the user passes a negative integer intput", () => {
       expect(() => account.deposit(-1, "20-03-2023")).toThrowError(
-        "Action failed: invalid input"
+        "Action failed: invalid amount input"
       );
       expect(() => account.withdraw(-10, "20-03-2023")).toThrowError(
-        "Action failed: invalid input"
+        "Action failed: invalid amount input"
       );
     });
   });

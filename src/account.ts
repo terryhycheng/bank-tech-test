@@ -27,7 +27,7 @@ export class Account {
       this.balance += amount;
       this.#addTransaction(amount, date, "deposit");
     } else {
-      throw new Error("Action failed: invalid input");
+      throw new Error("Action failed: invalid amount input");
     }
   }
 
@@ -40,7 +40,7 @@ export class Account {
         console.log("There is no transaction in this account.");
       }
     } else {
-      throw new Error("Action failed: invalid input");
+      throw new Error("Action failed: invalid amount input");
     }
   }
 
@@ -64,9 +64,15 @@ export class Account {
   }
 
   #formatDate(date: string) {
-    const dateArr = date.split("-");
-    const dateObj = new Date(`${dateArr[2]}-${dateArr[1]}-${dateArr[0]}`);
-    return dateObj;
+    const dateRegex = /^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-\d{4}$/;
+    console.log(dateRegex.test(date));
+    if (dateRegex.test(date)) {
+      const dateArr = date.split("-");
+      const dateObj = new Date(`${dateArr[2]}-${dateArr[1]}-${dateArr[0]}`);
+      return dateObj;
+    } else {
+      throw new Error("Action failed: invalid date input");
+    }
   }
 
   #inputChecker(input: any) {
