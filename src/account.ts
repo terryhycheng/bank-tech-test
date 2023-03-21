@@ -11,45 +11,51 @@ export class Account {
   }
 
   showStatement(): void {
-    if (this.records.length === 0) {
+    if (!this.records.length) {
       console.log("There is no transaction in this account.");
-    } else {
-      console.log("date || credit || debit || balance");
-      this.records.sort((a, b) => {
-        return a.date.getTime() - b.date.getTime();
-      });
-      let total = 0;
-      this.records.forEach((record) => {
-        record.action === "deposit"
-          ? (total += record.amount)
-          : (total -= record.amount);
-        record.balance = total;
-      });
-      this.records.reverse();
-      this.records.forEach((record) => this.#formatRecord(record));
+      return;
     }
+
+    console.log("date || credit || debit || balance");
+    this.#sortingRecords(this.records).forEach((record) =>
+      this.#formatRecord(record)
+    );
   }
 
   deposit(amount: number, date: string): void {
-    if (this.#inputChecker(amount)) {
-      this.balance += amount;
-      this.#addTransaction(amount, date, "deposit");
-    } else {
+    if (!this.#inputChecker(amount)) {
       throw new Error("Action failed: invalid amount input");
     }
+
+    this.balance += amount;
+    this.#addTransaction(amount, date, "deposit");
   }
 
   withdraw(amount: number, date: string): void {
-    if (this.#inputChecker(amount)) {
-      if (this.balance >= amount) {
-        this.balance -= amount;
-        this.#addTransaction(amount, date, "withdraw");
-      } else {
-        throw new Error("Transaction failed: not enough balance");
-      }
-    } else {
+    if (!this.#inputChecker(amount)) {
       throw new Error("Action failed: invalid amount input");
     }
+
+    if (this.balance >= amount) {
+      this.balance -= amount;
+      this.#addTransaction(amount, date, "withdraw");
+    } else {
+      throw new Error("Transaction failed: not enough balance");
+    }
+  }
+
+  #sortingRecords(records: Record[]): Record[] {
+    records.sort((a, b) => {
+      return a.date.getTime() - b.date.getTime();
+    });
+    let total = 0;
+    records.forEach((record) => {
+      record.action === "deposit"
+        ? (total += record.amount)
+        : (total -= record.amount);
+      record.balance = total;
+    });
+    return records.reverse();
   }
 
   #addTransaction(amount: number, date: string, action: string) {
