@@ -1,14 +1,17 @@
 import { Account } from "../src/account";
 import { Formater } from "../src/formater";
+import { Statement } from "../src/statement";
 
 let account: Account;
 let formater: Formater;
+let statement: Statement;
 let consoleSpy: jest.SpyInstance;
 
 describe("Account", () => {
   beforeEach(() => {
     formater = new Formater();
-    account = new Account(formater);
+    statement = new Statement(formater);
+    account = new Account(formater, statement);
     consoleSpy = jest.spyOn(console, "log");
     consoleSpy.mockReset();
   });
