@@ -13,4 +13,8 @@ export class Account {
   showStatement(): string {
     return "There is no transaction in this account.";
   }
+
+  deposit(amount: number, date: string): void {
+    this.balance += amount;
+  }
 }

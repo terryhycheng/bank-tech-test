@@ -19,4 +19,12 @@ describe("Account", () => {
       );
     });
   });
+
+  describe("#deposit", () => {
+    it("should add the correct deposit to the balance", () => {
+      account.deposit(50, "18-03-2023");
+
+      expect(account.showBalance()).toEqual(50);
+    });
+  });
 });
