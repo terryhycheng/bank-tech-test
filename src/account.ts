@@ -15,10 +15,6 @@ export class Account {
     this.records = [];
   }
 
-  showBalance(): number {
-    return this.balance;
-  }
-
   showStatement(): string | void {
     if (this.records.length === 0) {
       return "There is no transaction in this account.";
