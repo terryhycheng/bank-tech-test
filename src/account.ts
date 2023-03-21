@@ -10,9 +10,9 @@ export class Account {
     this.records = [];
   }
 
-  showStatement(): string | void {
+  showStatement(): void {
     if (this.records.length === 0) {
-      return "There is no transaction in this account.";
+      console.log("There is no transaction in this account.");
     } else {
       console.log("date || credit || debit || balance");
       this.records.sort((a, b) => {
@@ -28,8 +28,12 @@ export class Account {
   }
 
   withdraw(amount: number, date: string): void {
-    this.balance -= amount;
-    this.#addTransaction(amount, date, "withdraw");
+    if (this.balance >= amount) {
+      this.balance -= amount;
+      this.#addTransaction(amount, date, "withdraw");
+    } else {
+      console.log("There is no transaction in this account.");
+    }
   }
 
   #addTransaction(amount: number, date: string, action: string) {

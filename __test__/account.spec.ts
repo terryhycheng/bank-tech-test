@@ -1,10 +1,13 @@
 import { Account } from "../src/account";
 
 let account: Account;
+let consoleSpy: jest.SpyInstance;
 
 describe("Account", () => {
   beforeEach(() => {
     account = new Account();
+    consoleSpy = jest.spyOn(console, "log");
+    consoleSpy.mockReset();
   });
 
   describe("default setting", () => {
@@ -13,7 +16,8 @@ describe("Account", () => {
     });
 
     it("should print out a empty statement message", () => {
-      expect(account.showStatement()).toEqual(
+      account.showStatement();
+      expect(consoleSpy.mock.calls[0][0]).toBe(
         "There is no transaction in this account."
       );
     });
@@ -36,7 +40,6 @@ describe("Account", () => {
 
   describe("#showStatement", () => {
     it("should print out the statement in a reverse order", () => {
-      const consoleSpy = jest.spyOn(console, "log");
       account.deposit(100, "20-03-2023");
       account.withdraw(50, "20-03-2023");
       account.showStatement();
@@ -48,6 +51,17 @@ describe("Account", () => {
       );
       expect(consoleSpy.mock.calls[2][0]).toBe(
         "20/03/2023 || 100.00 || || 100.00"
+      );
+    });
+  });
+
+  describe("edge cases", () => {
+    it("should remain unchanged and print out an error message if the amount is larger than the balance", () => {
+      account.withdraw(50, "21-03-2023");
+      account.showStatement();
+      expect(account.balance).toEqual(0);
+      expect(consoleSpy.mock.calls[0][0]).toBe(
+        "There is no transaction in this account."
       );
     });
   });
