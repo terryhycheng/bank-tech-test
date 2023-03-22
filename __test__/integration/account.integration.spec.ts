@@ -63,15 +63,13 @@ describe("Account Integration", () => {
 
   describe("edge cases", () => {
     it("should throw an error when the date format is incorrect", () => {
-      expect(() => account.deposit(50, "03-20-2023")).toThrowError(
-        "Action failed: invalid date input"
-      );
-      expect(() => account.deposit(50, "-142!241njqwkr")).toThrowError(
-        "Action failed: invalid date input"
-      );
-      expect(() => account.deposit(50, "")).toThrowError(
-        "Action failed: invalid date input"
-      );
+      const invalidInputs = ["03-20-2023", "-142!241njqwkr", ""];
+
+      invalidInputs.forEach((input) => {
+        expect(() => account.deposit(50, input)).toThrowError(
+          "Action failed: invalid date input"
+        );
+      });
     });
 
     it("should remain unchanged and print out an error message if the amount is larger than the balance", () => {
