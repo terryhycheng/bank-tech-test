@@ -2,114 +2,75 @@ import { Account } from "../src/account";
 import { Formater } from "../src/formater";
 import { Statement } from "../src/statement";
 
+jest.mock("../src/formater");
+jest.mock("../src/statement");
+
 let account: Account;
 let formater: Formater;
 let statement: Statement;
-let consoleSpy: jest.SpyInstance;
+const formaterMock = Formater as jest.MockedClass<typeof Formater>;
+const statementMock = Statement as jest.MockedClass<typeof Statement>;
 
 describe("Account", () => {
   beforeEach(() => {
-    formater = new Formater();
-    statement = new Statement(formater);
+    formater = new formaterMock();
+    statement = new statementMock(formater);
     account = new Account(formater, statement);
-    consoleSpy = jest.spyOn(console, "log");
-    consoleSpy.mockReset();
   });
 
-  describe("default setting", () => {
-    it("should return 0 when the account was created", () => {
-      expect(account.showBalance()).toEqual(0);
+  describe("#showBalance", () => {
+    it("should call calculateBalance once", () => {
+      const spy = jest.spyOn(statement, "calculateBalance");
+      account.showBalance();
+      expect(spy).toBeCalledTimes(1);
     });
 
-    it("should print out a empty statement message", () => {
-      account.showStatement();
-      expect(consoleSpy.mock.calls[0][0]).toBe(
-        "There is no transaction in this account."
-      );
+    it("should return a number from calculateBalance", () => {
+      const spy = jest.spyOn(statement, "calculateBalance");
+      spy.mockReturnValueOnce(200);
+      expect(account.showBalance()).toEqual(200);
     });
   });
 
   describe("#deposit", () => {
-    it("should add the correct deposit to the balance", () => {
-      account.deposit(50, "18-03-2023");
-      expect(account.showBalance()).toEqual(50);
+    it("should call addTransaction once", () => {
+      const spy = jest.spyOn(statement, "addTransaction");
+      account.deposit(50, "22-03-2023");
+      expect(spy).toHaveBeenCalledWith(50, "22-03-2023", "deposit");
+    });
+
+    it("should throw an error", () => {
+      expect(() => account.deposit(-50, "22-03-2023")).toThrowError(
+        "Action failed: invalid amount input"
+      );
+      expect(() => account.deposit("123" as any, "22-03-2023")).toThrowError(
+        "Action failed: invalid amount input"
+      );
     });
   });
 
   describe("#withdraw", () => {
-    it("should deduct the correct amount from the balance", () => {
-      account.deposit(100, "20-03-2023");
-      account.withdraw(50, "20-03-2023");
-      expect(account.showBalance()).toEqual(50);
+    it("should call addTransaction once", () => {
+      const spy = jest.spyOn(statement, "addTransaction");
+      account.withdraw(50, "22-03-2023");
+      expect(spy).toHaveBeenCalledWith(50, "22-03-2023", "withdraw");
+    });
+
+    it("should throw an error", () => {
+      expect(() => account.withdraw(-50, "22-03-2023")).toThrowError(
+        "Action failed: invalid amount input"
+      );
+      expect(() => account.withdraw("123" as any, "22-03-2023")).toThrowError(
+        "Action failed: invalid amount input"
+      );
     });
   });
 
   describe("#showStatement", () => {
-    it("should print out the statement in a reverse order", () => {
-      account.deposit(100, "20-03-2023");
-      account.withdraw(50, "20-03-2023");
+    it("should call makeStatement once", () => {
+      const spy = jest.spyOn(statement, "makeStatement");
       account.showStatement();
-      expect(consoleSpy.mock.calls[0][0]).toBe(
-        "date || credit || debit || balance"
-      );
-      expect(consoleSpy.mock.calls[1][0]).toBe(
-        "20/03/2023 || || 50.00 || 50.00"
-      );
-      expect(consoleSpy.mock.calls[2][0]).toBe(
-        "20/03/2023 || 100.00 || || 100.00"
-      );
-    });
-  });
-
-  describe("edge cases", () => {
-    it("should throw an error when the date format is incorrect", () => {
-      expect(() => account.deposit(50, "03-20-2023")).toThrowError(
-        "Action failed: invalid date input"
-      );
-      expect(() => account.deposit(50, "-142!241njqwkr")).toThrowError(
-        "Action failed: invalid date input"
-      );
-      expect(() => account.deposit(50, "")).toThrowError(
-        "Action failed: invalid date input"
-      );
-    });
-
-    it("should remain unchanged and print out an error message if the amount is larger than the balance", () => {
-      expect(() => account.withdraw(50, "21-03-2023")).toThrowError(
-        "Transaction failed: not enough balance"
-      );
-    });
-
-    it("should return an error message if the user passes a non-integer intput", () => {
-      const wrongInput = ["123", true, null];
-      wrongInput.forEach((input) => {
-        expect(() => account.deposit(input as any, "20-03-2023")).toThrowError(
-          "Action failed: invalid amount input"
-        );
-        expect(() => account.withdraw(input as any, "20-03-2023")).toThrowError(
-          "Action failed: invalid amount input"
-        );
-      });
-    });
-
-    it("should return an error message if the user passes a negative integer intput", () => {
-      expect(() => account.deposit(-1, "20-03-2023")).toThrowError(
-        "Action failed: invalid amount input"
-      );
-      expect(() => account.withdraw(-10, "20-03-2023")).toThrowError(
-        "Action failed: invalid amount input"
-      );
-    });
-
-    it("should prevent users to add an invalid transaction to the records", () => {
-      account.deposit(100, "20-03-2023");
-      expect(account.showBalance()).toEqual(100);
-      expect(() => account.withdraw(50, "18-03-2023")).toThrowError(
-        "Transaction failed: not enough balance"
-      );
-      account.deposit(50, "16-03-2023");
-      account.withdraw(50, "18-03-2023");
-      expect(account.showBalance()).toEqual(100);
+      expect(spy).toBeCalledTimes(1);
     });
   });
 });
