@@ -7,7 +7,7 @@ let formater: Formater;
 let statement: Statement;
 let consoleSpy: jest.SpyInstance;
 
-xdescribe("Account Integration", () => {
+describe("Account Integration", () => {
   beforeEach(() => {
     formater = new Formater();
     statement = new Statement(formater);
