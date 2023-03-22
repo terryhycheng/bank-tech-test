@@ -16,12 +16,12 @@ export class Account {
   }
 
   deposit(amount: number, date: string): void {
-    this.#inputChecker(amount);
+    this.inputChecker(amount);
     this.statement.addTransaction(amount, date, "deposit");
   }
 
   withdraw(amount: number, date: string): void {
-    this.#inputChecker(amount);
+    this.inputChecker(amount);
     this.statement.addTransaction(amount, date, "withdraw");
   }
 
@@ -29,7 +29,7 @@ export class Account {
     this.statement.makeStatement();
   }
 
-  #inputChecker(input: any) {
+  private inputChecker(input: any) {
     if (typeof input !== "number" || input < 0) {
       throw new Error("Action failed: invalid amount input");
     }

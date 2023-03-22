@@ -24,11 +24,11 @@ export class Statement {
       action,
     };
     this.records.push(record);
-    this.#sortingRecords();
-    this.#addBalance();
+    this.sortingRecords();
+    this.addBalance();
 
     if (action === "withdraw") {
-      this.#withdrawChecker(id);
+      this.withdrawChecker(id);
     }
   }
 
@@ -54,7 +54,7 @@ export class Statement {
     return total;
   }
 
-  #withdrawChecker(id: string) {
+  private withdrawChecker(id: string) {
     this.records.forEach((record) => {
       if (record.balance! < 0) {
         this.records = this.records.filter((record) => record.id !== id);
@@ -63,13 +63,13 @@ export class Statement {
     });
   }
 
-  #sortingRecords() {
+  private sortingRecords() {
     this.records.sort((a, b) => {
       return a.date.getTime() - b.date.getTime();
     });
   }
 
-  #addBalance() {
+  private addBalance() {
     let total = 0;
     this.records.forEach((record) => {
       record.action === "deposit"
