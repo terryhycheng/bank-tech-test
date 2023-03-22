@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/main.ts",
     "build": "npx tsc",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "dev": "ts-node src/main.ts",
+    "start": "yarn build && node dist/main.js"
   },
   "keywords": [],
   "author": "",
