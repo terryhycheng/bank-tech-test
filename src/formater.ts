@@ -19,7 +19,7 @@ export class Formater {
         action === "deposit"
           ? `${amount.toFixed(2)} ||`
           : `|| ${amount.toFixed(2)}`
-      } || ${balance?.toFixed(2)}`
+      } || ${balance!.toFixed(2)}`
     );
   }
 }
