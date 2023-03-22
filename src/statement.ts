@@ -54,6 +54,7 @@ export class Statement {
     return total;
   }
 
+  // checks if the new record will make the balance below 0
   private withdrawChecker(id: string) {
     this.records.forEach((record) => {
       if (record.balance! < 0) {
@@ -69,6 +70,7 @@ export class Statement {
     });
   }
 
+  // calculates and adds balance property into record
   private addBalance() {
     let total = 0;
     this.records.forEach((record) => {
