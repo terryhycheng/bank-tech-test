@@ -20,6 +20,7 @@
 
 - [Table of Contents](#table-of-contents)
 - [About The Project](#about-the-project)
+  - [Programme Demo](#programme-demo)
   - [Built With](#built-with)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
@@ -42,7 +43,18 @@ It offers a range of features, including:
 2. You can easily **print out statements** and check the balance of each account.
 3. You can **insert records on different dates**, ensuring that all your financial transactions are accurately recorded and organized.
 
-Addtinally, with a test coverage of over 95% and built with `Typescript`, you can be confident that this program has been thoroughly tested, type-saved and is ready for use.
+Addtinally, with a test coverage of over 95% and built with `Typescript`, you can be confident that this programme has been thoroughly tested, type-saved and is ready for use.
+
+### Programme Demo
+
+You can use `deposit`, `withdraw` to insert financial records with a **specific date** and use `showStatement` to print out the statement like the following:
+
+```
+date || credit || debit || balance
+14/01/2023 || || 500.00 || 2500.00
+13/01/2023 || 2000.00 || || 3000.00
+10/01/2023 || 1000.00 || || 1000.00
+```
 
 ### Built With
 
